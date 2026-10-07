@@ -1,5 +1,13 @@
 # Beszel
 
+## Granular history fork
+
+This fork adds continuous **15-second samples retained for 35 days**, configurable with `BESZEL_HISTORY_INTERVAL_SECONDS` and `BESZEL_HISTORY_RETENTION_DAYS`. The new **History** view provides date navigation, peak-preserving charts, daily percentiles, usage distributions, coverage and original-sample CSV export while keeping the native minute maintenance and alerts.
+
+Use this fork's hub build to enable these features. Upstream images and the community Proxmox installer install upstream Beszel; an existing LXC can use this fork after replacing its hub executable. See the [fork deployment guide](supplemental/history/README.md) for native Linux builds, environment variables and safe updates. Linux binaries are also available as artifacts of successful **Validate and build history hub** Actions runs.
+
+## Upstream project
+
 Beszel is a lightweight server monitoring platform that includes Docker statistics, historical data, and alert functions.
 
 It has a friendly web interface, simple configuration, and is ready to use out of the box. It supports automatic backup, multi-user, OAuth authentication, and API access.
