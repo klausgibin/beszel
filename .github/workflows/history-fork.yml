@@ -1,0 +1,49 @@
+name: Validate and build history hub
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: oven-sh/setup-bun@v2
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+          cache: true
+      - name: Install frontend dependencies
+        run: bun install --frozen-lockfile --cwd internal/site
+      - name: Compile translations and build frontend
+        working-directory: internal/site
+        run: |
+          bunx lingui compile
+          bunx tsc -b
+          bunx vite build
+      - name: Run frontend test suite
+        working-directory: internal/site
+        run: bun test
+      - name: Run Go test suite
+        run: go test -tags='testing no_ui' ./...
+      - name: Build native Linux hubs
+        run: |
+          mkdir -p build/history
+          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -trimpath -ldflags='-w -s' -o build/history/beszel-linux-amd64 ./internal/cmd/hub
+          CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -trimpath -ldflags='-w -s' -o build/history/beszel-linux-arm64 ./internal/cmd/hub
+          cd build/history
+          sha256sum beszel-linux-* > SHA256SUMS
+      - uses: actions/upload-artifact@v6
+        with:
+          name: beszel-history-linux
+          path: build/history/
+          if-no-files-found: error
+          retention-days: 14

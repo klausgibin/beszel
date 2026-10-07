@@ -2537,3 +2537,164 @@ msgstr "Sim"
 #: src/components/routes/settings/layout.tsx
 msgid "Your user settings have been updated."
 msgstr "As configurações do seu usuário foram atualizadas."
+
+#. placeholder {0}: data.summary.count
+#. placeholder {1}: data.bucketSeconds
+#: src/components/routes/system/history-panel.tsx
+msgid "{0} samples · Display buckets: {1}s. Missing observations are gaps."
+msgstr "{0} amostras · Intervalo do gráfico: {1}s. Observações ausentes aparecem como lacunas."
+
+#: src/components/routes/system/history-panel.tsx
+msgid "Above threshold"
+msgstr "Acima do limite"
+
+#: src/components/routes/system/history-panel.tsx
+msgid "Choose a valid range within retention, ending no later than now, and a nonnegative threshold."
+msgstr "Escolha um período válido dentro da retenção, terminando até agora, e um limite não negativo."
+
+#: src/components/routes/system/history-panel.tsx
+msgid "Could not export historical samples"
+msgstr "Não foi possível exportar as amostras históricas"
+
+#: src/components/routes/system/history-panel.tsx
+#: src/components/routes/system/history-panel.tsx
+msgid "Coverage"
+msgstr "Cobertura"
+
+#: src/components/routes/system/history-panel.tsx
+msgid "Daily analysis"
+msgstr "Análise diária"
+
+#: src/components/routes/system/history-panel.tsx
+msgid "Date"
+msgstr "Data"
+
+#: src/components/routes/system/history-panel.tsx
+msgid "Export original CSV"
+msgstr "Exportar CSV original"
+
+#: src/components/routes/system/history-panel.tsx
+msgid "Exporting…"
+msgstr "Exportando…"
+
+#: src/components/routes/system/history-panel.tsx
+msgid "From"
+msgstr "De"
+
+#: src/components/routes/system/history-panel.tsx
+#: src/components/routes/system/history-panel.tsx
+msgid "Historical analysis"
+msgstr "Análise histórica"
+
+#: src/components/routes/system/history-panel.tsx
+msgid "Historical usage chart with minimum, mean and observed peak"
+msgstr "Gráfico de utilização histórica com mínimo, média e pico observado"
+
+#: src/components/routes/system.tsx
+msgid "History"
+msgstr "Histórico"
+
+#: src/components/routes/system/history-panel.tsx
+msgid "Loading original samples…"
+msgstr "Carregando amostras originais…"
+
+#: src/components/routes/system.tsx
+msgid "Loading…"
+msgstr "Carregando…"
+
+#: src/components/routes/system/history-panel.tsx
+msgid "Mean"
+msgstr "Média"
+
+#: src/components/routes/system/history-panel.tsx
+msgid "Median (p50)"
+msgstr "Mediana (p50)"
+
+#: src/components/routes/system/history-panel.tsx
+msgid "Metric"
+msgstr "Métrica"
+
+#: src/components/routes/system/history-panel.tsx
+msgid "Minimum"
+msgstr "Mínimo"
+
+#: src/components/routes/system.tsx
+msgid "Monitoring"
+msgstr "Monitoramento"
+
+#: src/components/routes/system/history-panel.tsx
+msgid "Next day"
+msgstr "Próximo dia"
+
+#: src/components/routes/system/history-panel.tsx
+msgid "No archived samples in this range. History starts when collection is enabled; unavailable systems and absent containers are gaps."
+msgstr "Não há amostras arquivadas neste período. O histórico começa quando a coleta é ativada; sistemas indisponíveis e containers ausentes aparecem como lacunas."
+
+#: src/components/routes/system/history-panel.tsx
+msgid "Observations"
+msgstr "Observações"
+
+#: src/components/routes/system/history-panel.tsx
+#: src/components/routes/system/history-panel.tsx
+#: src/components/routes/system/history-panel.tsx
+msgid "Observed peak"
+msgstr "Pico observado"
+
+#: src/components/routes/system/history-panel.tsx
+msgid "Original samples remain available when zooming or exporting. Overview charts preserve observed peaks."
+msgstr "As amostras originais continuam disponíveis ao ampliar ou exportar. Os gráficos gerais preservam os picos observados."
+
+#: src/components/routes/system/history-panel.tsx
+msgid "Percentage of original observations in each usage band. CPU is measured over each sampling interval."
+msgstr "Percentual das observações originais em cada faixa de utilização. A CPU é medida ao longo de cada intervalo de coleta."
+
+#: src/components/routes/system/history-panel.tsx
+msgid "Percentiles use original samples. Time above threshold is relative to observed time; coverage shows missing time."
+msgstr "Os percentis usam amostras originais. O tempo acima do limite é relativo ao tempo observado; a cobertura mostra o tempo sem dados."
+
+#: src/components/routes/system/history-panel.tsx
+msgid "Previous day"
+msgstr "Dia anterior"
+
+#: src/components/routes/system/history-panel.tsx
+msgid "Samples"
+msgstr "Amostras"
+
+#. placeholder {0}: config.intervalSeconds
+#. placeholder {1}: config.retentionDays
+#: src/components/routes/system/history-panel.tsx
+msgid "Sampling: {0}s · Retention: {1} days"
+msgstr "Coleta: {0}s · Retenção: {1} dias"
+
+#: src/components/routes/system/history-panel.tsx
+msgid "System or container"
+msgstr "Sistema ou container"
+
+#: src/components/routes/system/history-panel.tsx
+msgid "Threshold"
+msgstr "Limite"
+
+#: src/components/routes/system/history-panel.tsx
+msgid "Time above threshold"
+msgstr "Tempo acima do limite"
+
+#: src/components/routes/system/history-panel.tsx
+msgid "To"
+msgstr "Até"
+
+#: src/components/routes/system/history-panel.tsx
+msgid "Usage distribution"
+msgstr "Distribuição de utilização"
+
+#: src/components/routes/system/history-panel.tsx
+msgid "Usage distribution histogram"
+msgstr "Histograma da distribuição de utilização"
+
+#: src/components/routes/system/history-panel.tsx
+msgid "Zoom into selection"
+msgstr "Ampliar seleção"
+
+
+#: src/components/routes/system/history-panel.tsx
+msgid "Container CPU may exceed 100% when using multiple cores."
+msgstr "A CPU do container pode ultrapassar 100% ao utilizar vários núcleos."

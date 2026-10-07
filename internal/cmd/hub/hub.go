@@ -46,13 +46,7 @@ func getBaseApp() *pocketbase.PocketBase {
 	baseApp.RootCmd.Use = beszel.AppName
 	baseApp.RootCmd.Short = ""
 	// add update command
-	updateCmd := &cobra.Command{
-		Use:   "update",
-		Short: "Update " + beszel.AppName + " to the latest version",
-		Run:   hub.Update,
-	}
-	updateCmd.Flags().Bool("china-mirrors", false, "Use mirror (gh.beszel.dev) instead of GitHub")
-	baseApp.RootCmd.AddCommand(updateCmd)
+	baseApp.RootCmd.AddCommand(newUpdateCmd())
 	// add health command
 	baseApp.RootCmd.AddCommand(newHealthCmd())
 
@@ -63,6 +57,17 @@ func getBaseApp() *pocketbase.PocketBase {
 	})
 
 	return baseApp
+}
+
+// Fork builds must never replace themselves with the upstream hub binary.
+func newUpdateCmd() *cobra.Command {
+	return &cobra.Command{
+		Use:   "update",
+		Short: "Explain how to update this history fork",
+		RunE: func(_ *cobra.Command, _ []string) error {
+			return fmt.Errorf("upstream self-update is disabled for this fork; deploy a new hub build from klausgibin/beszel while preserving the data directory")
+		},
+	}
 }
 
 func newHealthCmd() *cobra.Command {

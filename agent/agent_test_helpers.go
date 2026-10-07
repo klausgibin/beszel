@@ -6,3 +6,8 @@ package agent
 func (a *Agent) GetConnectionManager() *ConnectionManager {
 	return a.connectionManager
 }
+
+// TESTING ONLY: GetState reads connection state with the same lock used by transitions.
+func (c *ConnectionManager) GetState() ConnectionState {
+	return c.getState()
+}

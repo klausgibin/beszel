@@ -64,6 +64,7 @@ type System struct {
 	recordsMu sync.Mutex
 	// Protected by recordsMu; realtime reads don't consume probes.
 	lastSavedMonitorProbe map[string]int64
+	archiveWarmed         bool // Accessed only by the scheduled updater.
 }
 
 // errSSHDisabled is returned instead of dialing SSH when DISABLE_SSH is set on the hub.
@@ -133,6 +134,14 @@ func (sys *System) StartUpdater() {
 		}
 	}
 
+	archiveInterval := historyInterval()
+	var archiveTicks <-chan time.Time
+	if archiveInterval < time.Minute {
+		archiveTicker := time.NewTicker(archiveInterval)
+		defer archiveTicker.Stop()
+		archiveTicks = archiveTicker.C
+	}
+
 	sys.updateTicker = time.NewTicker(time.Duration(interval) * time.Millisecond)
 	// Go 1.23+ will automatically stop the ticker when the system is garbage collected, however we seem to need this or testing/synctest will block even if calling runtime.GC()
 	defer sys.updateTicker.Stop()
@@ -141,6 +150,10 @@ func (sys *System) StartUpdater() {
 		select {
 		case <-sys.ctx.Done():
 			return
+		case <-archiveTicks:
+			if err := sys.collectArchive(int(archiveInterval / time.Second)); err != nil {
+				sys.manager.hub.Logger().Debug("History sample skipped", "system", sys.Id, "error", err)
+			}
 		case <-sys.updateTicker.C:
 			if err := sys.update(); err != nil {
 				_ = sys.setDown(err)
@@ -183,6 +196,12 @@ func (sys *System) update() error {
 
 	// create system records
 	_, err = sys.createRecords(data)
+
+	if err == nil && historyInterval() == time.Minute {
+		if archiveErr := sys.archiveSample(data, 60); archiveErr != nil {
+			sys.manager.hub.Logger().Error("History sample failed", "system", sys.Id, "error", archiveErr)
+		}
+	}
 
 	// if details were included and fetched successfully, mark details as fetched and update smart interval if set by agent
 	if err == nil && data.Details != nil {

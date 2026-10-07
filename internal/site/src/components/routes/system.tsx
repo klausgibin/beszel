@@ -1,10 +1,14 @@
-import { memo, useState } from "react"
+import { lazy, Suspense, memo, useState } from "react"
+import { t } from "@lingui/core/macro"
 import { Trans } from "@lingui/react/macro"
 import { compareSemVer, parseSemVer, supportsNetworkMonitors } from "@/lib/utils"
 import { SystemStatus } from "@/lib/enums"
 import type { GPUData } from "@/types"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import InfoBar from "./system/info-bar"
+import { Button } from "@/components/ui/button"
+
+const HistoryPanel = lazy(() => import("./system/history-panel"))
 import { useSystemData } from "./system/use-system-data"
 import { CpuChart, ContainerCpuChart } from "./system/charts/cpu-charts"
 import { MemoryChart, ContainerMemoryChart, SwapChart } from "./system/charts/memory-charts"
@@ -33,6 +37,7 @@ const SEMVER_0_15_0 = parseSemVer("0.15.0")
 
 export default memo(function SystemDetail({ id }: { id: string }) {
 	const systemData = useSystemData(id)
+	const [showHistory, setShowHistory] = useState(false)
 
 	const {
 		system,
@@ -331,7 +336,37 @@ export default memo(function SystemDetail({ id }: { id: string }) {
 				details={details}
 			/>
 
-			{displayMode === "tabs" ? tabbedLayout() : defaultLayout()}
+			<fieldset className="flex gap-2" aria-label={t`Monitoring`}>
+				<Button
+					variant={showHistory ? "outline" : "secondary"}
+					aria-pressed={!showHistory}
+					onClick={() => setShowHistory(false)}
+				>
+					<Trans>Monitoring</Trans>
+				</Button>
+				<Button
+					variant={showHistory ? "secondary" : "outline"}
+					aria-pressed={showHistory}
+					onClick={() => setShowHistory(true)}
+				>
+					<Trans>History</Trans>
+				</Button>
+			</fieldset>
+			{showHistory ? (
+				<Suspense
+					fallback={
+						<output>
+							<Trans>Loading…</Trans>
+						</output>
+					}
+				>
+					<HistoryPanel key={id} systemId={id} />
+				</Suspense>
+			) : displayMode === "tabs" ? (
+				tabbedLayout()
+			) : (
+				defaultLayout()
+			)}
 		</div>
 	)
 })

@@ -175,6 +175,9 @@ func (h *Hub) registerApiRoutes(se *core.ServeEvent) error {
 		total, err := e.App.CountRecords("users")
 		return e.JSON(http.StatusOK, map[string]bool{"firstRun": err == nil && total == 0})
 	})
+	apiAuth.GET("/history/config", h.historyConfig)
+	apiAuth.GET("/history", h.getHistory)
+	apiAuth.GET("/history/export", h.getHistory)
 	// get public key and version
 	apiAuth.GET("/info", h.getInfo)
 	apiAuth.GET("/getkey", h.getInfo) // deprecated - keep for compatibility w/ integrations

@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	"github.com/henrygd/beszel/internal/alerts"
+	"github.com/henrygd/beszel/internal/history"
 	"github.com/henrygd/beszel/internal/hub/config"
 	"github.com/henrygd/beszel/internal/hub/heartbeat"
 	"github.com/henrygd/beszel/internal/hub/systems"
@@ -121,6 +122,9 @@ func (h *Hub) StartHub() error {
 
 // initialize sets up initial configuration (collections, settings, etc.)
 func (h *Hub) initialize(app core.App) error {
+	if _, err := history.Load(); err != nil {
+		return err
+	}
 	// set general settings
 	settings := app.Settings()
 	// batch requests (for alerts)

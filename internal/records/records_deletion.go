@@ -2,6 +2,7 @@ package records
 
 import (
 	"fmt"
+	"github.com/henrygd/beszel/internal/history"
 	"log/slog"
 	"time"
 
@@ -11,6 +12,10 @@ import (
 
 // Delete old records
 func (rm *RecordManager) DeleteOldRecords() {
+	// Raw cleanup commits each bounded batch independently, avoiding a long writer lock.
+	if err := deleteRawHistory(rm.app); err != nil {
+		slog.Error("Error deleting raw history", "err", err)
+	}
 	// Pocketbase cron does not handle errors, log them here.
 	rm.app.RunInTransaction(func(txApp core.App) error {
 		err := deleteOldSystemStats(txApp)
@@ -127,5 +132,29 @@ func deleteOldQuietHours(app core.App) error {
 		return err
 	}
 
+	return nil
+}
+
+func deleteRawHistory(app core.App) error {
+	c, err := history.Load()
+	if err != nil {
+		return err
+	}
+	cutoff := time.Now().UTC().Add(-time.Duration(c.RetentionDays) * 24 * time.Hour)
+	for _, name := range []string{"system_stats", "container_stats"} {
+		for batch := 0; batch < 100; batch++ {
+			result, err := app.DB().NewQuery("DELETE FROM " + name + " WHERE id IN (SELECT id FROM " + name + " WHERE type='raw' AND created < {:cutoff} ORDER BY created LIMIT 1000)").Bind(dbx.Params{"cutoff": getCreatedTimeField(name, cutoff)}).Execute()
+			if err != nil {
+				return err
+			}
+			n, err := result.RowsAffected()
+			if err != nil {
+				return err
+			}
+			if n < 1000 {
+				break
+			}
+		}
+	}
 	return nil
 }
